@@ -6,7 +6,6 @@ import EventManagement from '../views/EventManagement.vue'
 import PublicationsManagement from '../views/PublicationsManagement.vue'
 import Members from '../views/Members.vue'
 import Mailings from '../views/Mailings.vue'
-import Tools from '../views/Tools.vue'
 
 const router = createRouter
 ({
@@ -14,7 +13,7 @@ const router = createRouter
   routes: [
     {
         path: '/',
-        component: Home
+        redirect: '/dashboard'
     },
     {
         path: '/about',
@@ -26,23 +25,29 @@ const router = createRouter
     },
     {   
         path: '/event-management',
-        component: EventManagement
+        component: EventManagement,
+        meta: { title: 'Lista wydarzeń' }
     },
+    // {
+    //     path: '/events/:id',
+    //     name: 'EventDetails',
+    //     component: () => import('../views/EventDetailsView.vue'),
+    //     meta: { title: 'Szczegóły wydarzenia' }
+    // },
     {
         path: '/publication-schedule',
-        component: PublicationsManagement
+        component: PublicationsManagement,
+        meta: { title: 'Harmonogram publikacji' }
     },
     {
         path: '/members',
-        component: Members
+        component: Members,
+        meta: { title: 'Członkowie' }
     },
         {
         path: '/mailings',
-        component: Mailings
-    },
-    {
-        path: '/tools',
-        component: Tools
+        component: Mailings,
+        meta: { title: 'Maile' }
     }
   ]
 })

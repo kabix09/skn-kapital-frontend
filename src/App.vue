@@ -22,7 +22,7 @@ import Header from './components/Header.vue';
 	--primary: #4ade80;
 	--primary-alt: #22c55e;
 	--grey: #64748b;
-	--dark-button: #344766;
+	--dark-button: #27364e;
 	--dark: #1e293b;
 	--dark-alt: #334155;
 	--light: #f1f5f9;
