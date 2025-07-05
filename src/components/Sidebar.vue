@@ -1,13 +1,12 @@
 <template>
     <aside :class="`${is_expanded ? 'is-expanded' : ''}`">
-        <div class="logo">
-            <img src="../assets/icons/skn_kapital_icon.jpg" alt="Logo" />
-
+        <div class="logo flex items-center">
+            <img src="../assets/icons/skn_kapital_icon.jpg" alt="Logo" class="w-8 mr-2" />
             <span class="name">SKN Kapitał</span>   
         </div>
 
         <div class="menu-toggle-wrap">
-            <button class="menu-toggle" @click="ToggleMenu">
+            <button class="menu-toggle" @click="ToggleMenu" style="background: none;">
                 <!-- <span class="material-icons">dashboard_customize</span> -->
                 <span class="material-icons">keyboard_double_arrow_right</span>
             </button>
@@ -45,7 +44,7 @@
             </router-link>
         </div>
 
-        <div class="flex"></div>
+        <div style="flex: 1 1 0;"></div>
 
         <div class="menu">
             <router-link class="button" to="/settings">
@@ -82,9 +81,9 @@ aside {
 
     transition: 0.2s ease-out;
 
-    .flex {
-        flex: 1 1 0;
-    }
+    // .flex {
+    //     flex: 1 1 0;
+    // }
 
     .logo {
 		margin-bottom: 1rem;
@@ -95,11 +94,10 @@ aside {
 
             color: var(--light);
             position: relative;
-            top: -1rem;
+            // top: -1rem;
         }
 
 		img {
-			width: 2rem;
             transition: 0.2s ease-out;
 		}
 	}
@@ -110,7 +108,7 @@ aside {
         margin-bottom: 1rem;
 
         position: relative;
-        top: -2.5rem;
+        top: -1rem;
         transition: 0.2s ease-out;
 
         .menu-toggle {
