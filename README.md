@@ -40,3 +40,29 @@ Kod źródłowy tego projektu jest udostępniony wyłącznie w celach edukacyjny
 Nie wolno go kopiować, modyfikować, rozpowszechniać ani wykorzystywać w innych projektach bez pisemnej zgody autora.
 
 Wszelkie prawa zastrzeżone ©kabix09 2025
+
+### primevue
+```
+npm install primevue primeicons 
+```
+Bład pryz łądowaniu w `main.js`
+
+[Błęd](https://github.com/primefaces/primevue/issues/6268)
+
+Z [auto import](https://primevue.org/autoimport/) działa już poprawnie 
+```
+npm install -D unplugin-vue-components @primevue/auto-import-resolver
+```
+
+ale style ładują się na czarno wiec trzeba poprawić import
+
+```
+    .use(PrimeVue, {
+        theme: {
+            preset: Aura,
+            options: {
+                darkModeSelector: 'light', // Wymuszenie jasnego trybu
+            }
+        }
+    })
+```
