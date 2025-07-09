@@ -1,11 +1,11 @@
 <template>
-	<div class="app">
+  	<div class="app flex h-screen overflow-hidden">
 		<Sidebar />
 
 		<div class="flex-1 flex flex-col">
 			<Header />
 
-			<main class="flex-1 overflow-auto p-4">
+			<main class="flex-1 overflow-auto p-4"> <!-- min-h-0 -->
 				<router-view />
 			</main>
 		</div>
@@ -27,6 +27,12 @@ import Header from './components/Header.vue';
 	--dark-alt: #334155;
 	--light: #f1f5f9;
 	--sidebar-width: 300px;
+}
+
+@media (max-width: 1536px) {
+  :root {
+    --sidebar-width: 250px;
+  }
 }
 
 // * {

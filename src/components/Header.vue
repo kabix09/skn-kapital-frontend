@@ -1,5 +1,5 @@
 <template>
-  <header class="h-16 px-6 flex items-center shadow bg-white">
+  <header class="h-16 shrink-0 px-6 flex items-center shadow bg-white">
     <h1 class="text-2xl font-bold">{{ pageTitle }}</h1>
   </header>
 </template>
