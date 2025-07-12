@@ -16,7 +16,7 @@
     <!-- Drawer -->
     <Drawer v-model:isOpen="isOpen" title="Dodaj wydarzenie" width="w-1/3">
       <!-- Slot content -->
-      <p>Tu będzie formularz dodawania wydarzenia</p>
+      <AddEventForm/>
     </Drawer>
   </div>
 </template>
