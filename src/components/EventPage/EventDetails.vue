@@ -70,8 +70,16 @@
     </div>
 
     <!-- DRAWERS -->
-    <Drawer v-model:isOpen="isParticipantsOpen" title="Lista uczestników" width="w-1/3">
-      <p>Tu będzie lista uczestników</p>
+    <Drawer
+      v-if="event"
+      v-model:isOpen="isParticipantsOpen"
+      title="Lista uczestników"
+      width="w-3/8"
+    >
+      <EventParticipantsList
+        :eventId="event.id"
+        :maxParticipants="event.limit"
+      />
     </Drawer>
 
     <Drawer v-model:isOpen="isTaskOpen" title="Dodaj zadanie" width="w-1/3">
@@ -81,7 +89,8 @@
 </template>
 
 <script lang="js">
-import TaskList from './TaskList.vue';
+import EventParticipantsList from './EventParticipantsList.vue';
+import TaskList from './Task/TaskList.vue';
 import { getStatusLabel } from '@/utils/statusUtils'
 
 export default {

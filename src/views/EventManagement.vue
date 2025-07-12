@@ -40,7 +40,8 @@ const events = ref([
     waitlist: ['Daniel'],
     status: 'DONE',
     responsiblePerson: 'Kasia',
-    notes: 'Przygotować catering.'
+    notes: 'Przygotować catering.',
+    limit: 40,
   },
   {
     id: 2,
@@ -52,128 +53,9 @@ const events = ref([
     waitlist: [],
     status: 'DONE',
     responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
+    notes: 'Wysłać przypomnienia.',
+    limit: 55,
   },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  },
-  {
-    id: 2,
-    name: 'Webinar Vue 3',
-    description: 'Szkolenie online z Vue 3.',
-    date: '2025-09-10',
-    location: 'Online',
-    attendees: ['Emil', 'Filip'],
-    waitlist: [],
-    status: 'DONE',
-    responsiblePerson: 'Marta',
-    notes: 'Wysłać przypomnienia.'
-  }
 ])
 
 const selectedId = ref(null)

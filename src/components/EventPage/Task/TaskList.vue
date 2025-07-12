@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-1 overflow-y-auto min-h-0">
+    <div class="flex-1 overflow-y-auto min-h-0 border-t border-gray-200">
         <DataTable
             scrollable scrollHeight="100%"
             v-model:editingRows="editingRows" 

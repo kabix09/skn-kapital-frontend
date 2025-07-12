@@ -12,11 +12,11 @@
   <transition name="slide">
     <div
       v-if="isOpen"
-      class="fixed top-0 right-0 h-full z-50"
+      class="fixed top-0 right-0 h-full z-50 flex flex-col"
       :class="drawerWidthClass"
       style="background-color: var(--light);"
     >
-      <div class="p-4 flex justify-between items-center shadow bg-white"
+      <div class="p-4 flex justify-between items-center shadow bg-white shrink-0"
             style="background-color: var(--light)"
       >
         <h2 class="text-xl font-semibold"
@@ -31,7 +31,7 @@
             <span class="material-icons">close</span>
         </button>
       </div>
-      <div class="p-4 h-full overflow-y-auto">
+      <div class="flex-1 overflow-y-auto p-4 pt-2">
         <slot />
       </div>
     </div>
