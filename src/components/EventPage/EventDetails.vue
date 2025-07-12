@@ -19,11 +19,23 @@
       <!-- EVENT DETAILS -->
       <div class="grid grid-cols-1 md:grid-cols-10 gap-4 mb-4">
         <!-- DESCRIPTION -->
-        <div class="md:col-span-7 bg-gray-100 rounded-lg p-4 text-sm text-gray-600">
-          <p>
+        <div class="md:col-span-7 flex flex-col h-full">
+          <p class="bg-gray-100 rounded-lg p-4 text-sm text-gray-600 flex-grow overflow-auto">
             <strong>Opis: </strong>{{ event.description }}
           </p>
+
+          <!-- ACTION -->
+          <div class="flex justify-begin mt-2">
+            <Button 
+              label="Dodaj zadanie" 
+              icon="pi pi-plus" 
+              size="small" 
+              class="w-[150px]" 
+              @click="openAddTask"
+            />
+          </div>
         </div>
+
 
         <!-- ADDIDTIONAL INFO -->
         <div class="md:col-span-3 flex flex-col gap-4">
@@ -42,17 +54,6 @@
             <p>{{ event.responsiblePerson }}</p>
           </div>
         </div>
-      </div>
-
-      <!-- ADD TASK action-->
-      <div class="flex justify-end mb-4">
-        <Button 
-          label="Dodaj zadanie" 
-          icon="pi pi-plus" 
-          size="small" 
-          class="w-[150px]" 
-          @click="openAddTask"
-        />
       </div>
 
       <!-- TASK LIST -->
@@ -83,13 +84,14 @@
     </Drawer>
 
     <Drawer v-model:isOpen="isTaskOpen" title="Dodaj zadanie" width="w-1/3">
-      <p>Tu będzie formularz dodawania zadania</p>
+      <AddTaskForm/>
     </Drawer>
   </div>
 </template>
 
 <script lang="js">
 import EventParticipantsList from './EventParticipantsList.vue';
+import AddTaskForm from './Form/AddTaskForm.vue';
 import TaskList from './Task/TaskList.vue';
 import { getStatusLabel } from '@/utils/statusUtils'
 
