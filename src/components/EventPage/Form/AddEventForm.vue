@@ -98,6 +98,9 @@
 import { ref } from 'vue'
 import * as yup from 'yup'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
+import { useEventsStore } from '@/stores/events'
+
+const eventsStore = useEventsStore()
 
 // dane do selectów
 const people = ref([
@@ -140,16 +143,7 @@ const onSubmit = async (form) => {
   }
 
   try {
-    console.log('Payload do wysłania:', JSON.stringify(payload))
-
-    // const response = await fetch('https://example.com/api/events', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(normalizedPayload)
-    // })
-    // if (!response.ok) throw new Error('Błąd przy wysyłaniu')
-
-    //alert('Formularz wysłany pomyślnie!')
+    await eventsStore.createEvent(payload)
   } catch (error) {
     alert('Wystąpił błąd: ' + error.message)
   }

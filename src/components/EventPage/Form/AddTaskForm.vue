@@ -63,6 +63,16 @@
 import { ref } from 'vue'
 import * as yup from 'yup'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
+import { useEventTasksStore } from '@/stores/eventTasks'
+
+const props = defineProps({
+  eventId: {
+    type: Number,
+    required: true
+  }
+})
+
+const eventTasksStore = useEventTasksStore()
 
 // dane do selectów
 const people = ref([
@@ -98,16 +108,7 @@ const onSubmit = async (form) => {
   }
 
   try {
-    console.log('Payload do wysłania:', JSON.stringify(payload))
-
-    // const response = await fetch('https://example.com/api/tasks', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(normalizedPayload)
-    // })
-    // if (!response.ok) throw new Error('Błąd przy wysyłaniu')
-
-    //alert('Formularz wysłany pomyślnie!')
+    await eventTasksStore.createEventTask(props.eventId, payload)
   } catch (error) {
     alert('Wystąpił błąd: ' + error.message)
   }

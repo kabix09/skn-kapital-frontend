@@ -3,7 +3,7 @@
         <DataTable
             scrollable scrollHeight="100%"
             v-model:editingRows="editingRows" 
-            :value="products" 
+            :value="eventTasks" 
             editMode="row" 
             dataKey="id" 
             stripedRows 
@@ -48,7 +48,7 @@
 
             <Column field="status" header="Status" style="width: 10%">
                 <template #editor="{ data, field }">
-                    <Select v-model="data[field]" :options="statuses" optionLabel="label" optionValue="value" placeholder="Select a Status" fluid>
+                    <Select v-model="data[field]" :options="eventTaskStatuses" optionLabel="label" optionValue="value" placeholder="Select a Status" fluid>
                         <template #option="slotProps">
                             <Tag :value="slotProps.option.value" :severity="getStatusLabel(slotProps.option.value)" />
                         </template>
@@ -64,184 +64,43 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import { onMounted, ref } from 'vue';
+import { useEventTasksStore } from '@/stores/eventTasks'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { getStatusLabel } from '@/utils/statusUtils'
+import { storeToRefs } from 'pinia';
 
-export default {
-    data() {
-        return {
-            products: null,
-            editingRows: [],
-            statuses: [
-                { label: 'Zakończone', value: 'DONE' },
-                { label: 'W trakcie', value: 'IN_PROGRESS' },
-                { label: 'Zaplanowane', value: 'PLANNED' }
-            ]
-        };
-    },
-    mounted() {
-        this.products = [
-            {
-                id: '1000',
-                code: 'f230fh0g3',
-                name: 'Bamboo Watch',
-                person: 'John Doe',
-                description: 'Product Description',
-                image: 'bamboo-watch.jpg',
-                price: 65,
-                category: 'Accessories',
-                quantity: 24,
-                status: 'PLANNED',
-                date: '2015-09-13',
-                rating: 5
-            },
-            {
-                id: '1001',
-                code: 'nvklal433',
-                name: 'Black Watch',
-                person: 'Jane Smith',
-                description: 'Product Description',
-                image: 'black-watch.jpg',
-                price: 72,
-                category: 'Accessories',
-                quantity: 61,
-                status: 'DONE',
-                date: '2015-09-13',
-                rating: 4
-            },
-            {
-                id: '1002',
-                code: 'zz21cz3c1',
-                name: 'Blue Band',
-                person: 'Alice Johnson',
-                description: 'Product Description',
-                image: 'blue-band.jpg',
-                price: 79,
-                category: 'Fitness',
-                quantity: 2,
-                status: 'IN_PROGRESS',
-                date: '2015-09-13',
-                rating: 3
-            },
-            {
-                id: '1003',
-                code: '244wgerg2',
-                name: 'Red Watch',
-                person: 'Bob Brown',
-                description: 'Product Description',
-                image: 'red-watch.jpg',
-                price: 89,
-                category: 'Accessories',
-                quantity: 0,
-                status: 'IN_PROGRESS',
-                date: '2015-09-13',
-                rating: 5
-            },{
-                id: '1004',
-                code: 'nvklal433',
-                name: 'Black Watch',
-                person: 'Jane Smith',
-                description: 'Product Description',
-                image: 'black-watch.jpg',
-                price: 72,
-                category: 'Accessories',
-                quantity: 61,
-                status: 'DONE',
-                date: '2015-09-13',
-                rating: 4
-            },
-            {
-                id: '1005',
-                code: 'zz21cz3c1',
-                name: 'Blue Band',
-                person: 'Alice Johnson',
-                description: 'Product Description',
-                image: 'blue-band.jpg',
-                price: 79,
-                category: 'Fitness',
-                quantity: 2,
-                status: 'IN_PROGRESS',
-                date: '2015-09-13',
-                rating: 3
-            },
-            {
-                id: '1006',
-                code: '244wgerg2',
-                name: 'Red Watch',
-                person: 'Bob Brown',
-                description: 'Product Description',
-                image: 'red-watch.jpg',
-                price: 89,
-                category: 'Accessories',
-                quantity: 0,
-                status: 'IN_PROGRESS',
-                date: '2015-09-13',
-                rating: 5
-            },{
-                id: '1007',
-                code: 'nvklal433',
-                name: 'Black Watch',
-                person: 'Jane Smith',
-                description: 'Product Description',
-                image: 'black-watch.jpg',
-                price: 72,
-                category: 'Accessories',
-                quantity: 61,
-                status: 'DONE',
-                date: '2015-09-13',
-                rating: 4
-            },
-            {
-                id: '1008',
-                code: 'zz21cz3c1',
-                name: 'Blue Band',
-                person: 'Alice Johnson',
-                description: 'Product Description',
-                image: 'blue-band.jpg',
-                price: 79,
-                category: 'Fitness',
-                quantity: 2,
-                status: 'IN_PROGRESS',
-                date: '2015-09-13',
-                rating: 3
-            },
-            {
-                id: '1009',
-                code: '244wgerg2',
-                name: 'Red Watch',
-                person: 'Bob Brown',
-                description: 'Product Description',
-                image: 'red-watch.jpg',
-                price: 89,
-                category: 'Accessories',
-                quantity: 0,
-                status: 'IN_PROGRESS',
-                date: '2015-09-13',
-                rating: 5
-            }
-        ]
-    },
-    methods: {
-        getStatusLabel,
-        formatDate(value) {
-            if (!value) return '';
-            const date = new Date(value);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        },
-        onRowEditSave(event) {
-            let { newData, index } = event;
+const eventTasksStore = useEventTasksStore()
 
-            this.products[index] = newData;
-        },
-        getStatusLabel,
-        formatCurrency(value) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-        }
+onMounted(async () => {
+    await eventTasksStore.mockEventTasks();
+})
+
+const props = defineProps({
+    eventId: {
+        type: Number,
+        required: true
     }
+})
+
+const { eventTasks } = storeToRefs(eventTasksStore);
+const { eventTaskStatuses } = storeToRefs(eventTasksStore);
+
+const editingRows = ref([]);
+
+const formatDate = (value) => {
+    if (!value) return '';
+    const date = new Date(value);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+};
+
+const onRowEditSave = (event) => {
+    let { newData, index } = event;
+    eventTasksStore.editTask(props.eventId, index, newData);
 };
 </script>

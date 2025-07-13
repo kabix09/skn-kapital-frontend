@@ -13,12 +13,13 @@
       <button
         v-for="event in events"
         :key="event.id"
-        @click="$emit('select', event.id)"
+        @click="eventsStore.selectEvent(event.id)"
         :class="[
           'w-full text-left p-3 rounded hover:bg-blue-100 transition',
-          selectedId === event.id ? 'bg-blue-200 font-semibold' : ''
+          selectedEvent && selectedEvent.id === event.id ? 'bg-blue-200 font-semibold' : ''
         ]"
       >
+        <!-- @click="$emit('select', event.id)" -->
         {{ event.name }}
       </button>
     </div>
@@ -26,10 +27,17 @@
 </template>
 
 <script setup>
-defineProps({
-  events: Array,
-  selectedId: Number,
+import { useEventsStore } from '@/stores/events'
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+
+const eventsStore = useEventsStore()
+const { events, selectedEvent } = storeToRefs(eventsStore)
+
+onMounted(async () => {
+  await eventsStore.mockEvents()
 })
+
 
 defineEmits(['select', 'add'])
 </script>
