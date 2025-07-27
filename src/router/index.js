@@ -6,50 +6,75 @@ import EventManagement from '../views/EventManagement.vue'
 import PublicationsManagement from '../views/PublicationsManagement.vue'
 import Members from '../views/Members.vue'
 import Mailings from '../views/Mailings.vue'
+import NotFound from '../components/Error/NotFound.vue'
+import Login from '../components/Auth/Login.vue'
 
-const router = createRouter
-({
+import { useAuthStore } from '@/stores/auth'
+
+const routes = [
+  {
+    path: '/',
+    redirect: '/dashboard'
+  },
+  {
+    path: '/about',
+    component: About
+  },
+  {
+    path: '/dashboard',
+    component: Dashboard,
+    name: 'dashboard',
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/event-management',
+    component: EventManagement,
+    meta: { title: 'Lista wydarzeń', requiresAuth: true }
+  },
+  {
+    path: '/publication-schedule',
+    component: PublicationsManagement,
+    meta: { title: 'Harmonogram publikacji', requiresAuth: true }
+  },
+  {
+    path: '/members',
+    component: Members,
+    meta: { title: 'Członkowie', requiresAuth: true }
+  },
+  {
+    path: '/mailings',
+    component: Mailings,
+    meta: { title: 'Maile', requiresAuth: true }
+  },
+  {
+    path: '/login',
+    component: Login,
+    name: 'login'
+  },
+  {
+    path: '/:any(.*)*',
+    component: NotFound
+  }
+]
+
+const router = createRouter({
   history: createWebHistory(),
-  routes: [
-    {
-        path: '/',
-        redirect: '/dashboard'
-    },
-    {
-        path: '/about',
-        component: About
-    },
-    {
-        path: '/dashboard',
-        component: Dashboard
-    },
-    {   
-        path: '/event-management',
-        component: EventManagement,
-        meta: { title: 'Lista wydarzeń' }
-    },
-    // {
-    //     path: '/events/:id',
-    //     name: 'EventDetails',
-    //     component: () => import('../views/EventDetailsView.vue'),
-    //     meta: { title: 'Szczegóły wydarzenia' }
-    // },
-    {
-        path: '/publication-schedule',
-        component: PublicationsManagement,
-        meta: { title: 'Harmonogram publikacji' }
-    },
-    {
-        path: '/members',
-        component: Members,
-        meta: { title: 'Członkowie' }
-    },
-        {
-        path: '/mailings',
-        component: Mailings,
-        meta: { title: 'Maile' }
-    }
-  ]
+  routes,
+  linkActiveClass: 'active'
+})
+
+// 👇 Middleware logowania
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+  const isAuthenticated = !!auth.token // lub auth.user
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login')
+  } else if ((to.name === 'login') && isAuthenticated) {
+    next('/dashboard')
+  } else {
+    next()
+  }
 })
 
 export default router

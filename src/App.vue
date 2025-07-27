@@ -1,20 +1,28 @@
 <template>
-  	<div class="app flex h-screen overflow-hidden">
-		<Sidebar />
+  <div class="app flex h-screen overflow-hidden" v-if="!isAuthPage">
+    <Sidebar />
+    <div class="flex-1 flex flex-col">
+      <Header />
+      <main class="flex-1 overflow-auto p-4">
+        <router-view />
+      </main>
+    </div>
+  </div>
 
-		<div class="flex-1 flex flex-col">
-			<Header />
-
-			<main class="flex-1 overflow-auto p-4"> <!-- min-h-0 -->
-				<router-view />
-			</main>
-		</div>
-	</div>
+  <router-view v-else />
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
 import Sidebar from './components/Sidebar.vue';
-import Header from './components/Header.vue';
+import Header from './components/Header.vue'
+
+const route = useRoute()
+
+const layoutlessRoutes = ['/login']
+const isAuthPage = computed(() => layoutlessRoutes.includes(route.path))
 </script>
 
 <style lang="scss">
