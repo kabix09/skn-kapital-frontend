@@ -134,11 +134,26 @@ const schema = yup.object({
 // resolver na bazie yup
 const resolver = yupResolver(schema)
 
+function formatDateLocal(date) {
+  const d = new Date(date)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+// przesuwa date do tyłu np 08-10 -> 08-09 bo => new Date(form.values.deadline).toISOString().split('T')[0]
+// różnica stref czasowych –
+// toISOString() zawsze zwraca datę w UTC, więc przy północy w Polsce (UTC+2) przesuwa o jeden dzień wstecz.
+// Dlatego:
+//     W formularzu masz 2025-08-11 00:00 czasu lokalnego.
+//     toISOString() przelicza to na 2025-08-10T22:00:00.000Z.
+//     Potem .split('T')[0] daje 2025-08-10.
+
 const onSubmit = async (form) => {
   const payload = {
     ...form.values,
     deadline: form.values.deadline
-      ? new Date(form.values.deadline).toISOString().split('T')[0]
+      ? formatDateLocal(form.values.deadline)
       : null
   }
 
