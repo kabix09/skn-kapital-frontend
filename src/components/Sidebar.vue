@@ -30,10 +30,31 @@
             </router-link>
             <!-- <span class="material-symbols-outlined">event_note</span> -->
             <!-- <span class="material-symbols-outlined">perm_contact_calendar</span> -->
-            <router-link class="button" to="/members">
+            <!-- <router-link class="button" to="/members">
                 <span class="material-icons">group</span>
                 <span class="menu-text">Członkowie</span>
-            </router-link>
+            </router-link> -->
+            <!-- <router-link class="button has-submenu" to="/members">
+                <span class="material-icons">group</span>
+                <span class="menu-text">Członkowie</span>
+            </router-link> -->
+
+            <div class="button has-submenu" @click="toggleSubmenu('members')">
+                <span class="material-icons">group</span>
+                <span class="menu-text">Członkowie</span>
+                <span class="material-icons arrow" :class="{open: submenuOpen === 'members'}">
+                    keyboard_arrow_right
+                </span>
+            </div>
+            <div v-if="submenuOpen === 'members'" class="submenu">
+                <router-link class="sub-button" to="/members/access">Menadżer dostępu</router-link>
+                <router-link class="sub-button" to="/members/supervisors">Opiekunowie</router-link>
+                <router-link class="sub-button" to="/members/board">Zarząd Koła</router-link>
+                <router-link class="sub-button" to="/members/list">Członkowie</router-link>
+                <router-link class="sub-button" to="/members/guests">Goście</router-link>
+                <router-link class="sub-button" to="/members/consequences">Konsekwencje</router-link>
+            </div>
+
             <router-link class="button" to="/mailings">
                 <span class="material-icons">mail</span>
                 <span class="menu-text">Mailing</span>
@@ -65,9 +86,49 @@ const ToggleMenu = () => {
 	is_expanded.value = !is_expanded.value
 	localStorage.setItem("is_expanded", is_expanded.value)
 }
+
+
+const submenuOpen = ref(null)
+
+const toggleSubmenu = (menu) => {
+  submenuOpen.value = submenuOpen.value === menu ? null : menu
+}
 </script>
 
 <style lang="scss" scoped>
+.submenu {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+  margin-top: 0.2rem;
+
+  .sub-button {
+    display: block;
+    padding: 0.3rem 1rem;
+    text-decoration: none;
+    color: var(--light);
+    font-size: 0.9rem;
+    transition: 0.2s;
+
+    &:hover, &.router-link-exact-active {
+      color: var(--primary);
+    }
+  }
+}
+
+.button.has-submenu {
+  justify-content: space-between;
+  align-items: center;
+
+  .arrow {
+    transition: transform 0.2s;
+  }
+
+  .arrow.open {
+    transform: rotate(90deg);
+  }
+}
+
 aside {
     display: flex;
     flex-direction: column;
@@ -218,5 +279,7 @@ aside {
         position: fixed;
         z-index: 99;   
     }
+
+    
 }
 </style>
