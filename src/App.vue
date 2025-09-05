@@ -35,6 +35,14 @@ const isAuthPage = computed(() => layoutlessRoutes.includes(route.path))
 	--dark-alt: #334155;
 	--light: #f1f5f9;
 	--sidebar-width: 300px;
+
+	// Nadpisanie styli z PrimeVue DataTable -->
+	--p-datatable-body-cell-padding: 0.2rem 0.8rem !important; // padding do komórek w tabeli
+	--p-inputtext-padding-y: 0.3rem 0.3rem !important;
+    --p-select-padding-y: 0.3rem !important;
+	// --p-list-option-padding: 0.2rem 0.2rem !important; // lista opcji
+	--p-select-option-padding: 0.25rem 0.2rem !important;
+	--p-tag-padding: 0.15rem 0.5rem !important;
 }
 
 @media (max-width: 1536px) {

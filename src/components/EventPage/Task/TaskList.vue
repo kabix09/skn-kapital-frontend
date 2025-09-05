@@ -19,7 +19,7 @@
         >    
             <Column field="id" header="Id" style="width: 5%"></Column>
 
-            <Column field="name" header="Zadanie" style="width: 30%">
+            <Column field="name" header="Zadanie" style="width: 25%">
                 <template #editor="{ data, field }">
                     <InputText v-model="data[field]" fluid />
                 </template>
@@ -46,7 +46,15 @@
                 </template>
             </Column>
 
-            <Column field="status" header="Status" style="width: 10%">
+            <Column 
+                field="status" 
+                header="Status" 
+                style="width: 10%" 
+                :pt="{
+                    columnHeaderContent: { style: { 'justify-content': 'center' } },
+                    bodycell: { style: 'text-align:center;' }
+                }"
+            >
                 <template #editor="{ data, field }">
                     <Select v-model="data[field]" :options="eventTaskStatuses" optionLabel="label" optionValue="value" placeholder="Select a Status" fluid>
                         <template #option="slotProps">
@@ -59,7 +67,7 @@
                 </template>
             </Column>
 
-            <Column :rowEditor="true" style="width: 5%; min-width: 2rem" bodyStyle="text-align:center"></Column>
+            <Column :rowEditor="true" style="width: 10%" bodyStyle="text-align:center"></Column>
         </DataTable>
     </div>
 </template>
