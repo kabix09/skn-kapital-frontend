@@ -23,3 +23,14 @@ export function getMemberStatusLabel(status) {
       return null;
   }
 }
+
+export function getBooleanLabel(value) {
+  switch (value) {
+    case true:
+      return 'success';
+    case false:
+      return 'danger';
+    default:
+      return null;
+  } 
+}

@@ -6,6 +6,7 @@ import EventManagement from '../views/EventManagement.vue'
 import PublicationsManagement from '../views/PublicationsManagement.vue'
 import Staff from '../views/Staff.vue'
 import Guests from '../views/Guests.vue'
+import Consequences from '../views/Consequences.vue'
 import Mailings from '../views/Mailings.vue'
 import NotFound from '../components/Error/NotFound.vue'
 import Login from '../components/Auth/Login.vue'
@@ -38,6 +39,21 @@ const routes = [
     meta: { title: 'Harmonogram publikacji', requiresAuth: true }
   },
   {
+    path: '/members/access',
+    component: NotFound,
+    meta: { title: 'Menadżer dostępu', requiresAuth: true }
+  },
+  {
+    path: '/members/supervisors',
+    component: NotFound,
+    meta: { title: 'Opiekunowie', requiresAuth: true }
+  },
+  {
+    path: '/members/board',
+    component: NotFound,
+    meta: { title: 'Zarząd koła', requiresAuth: true }
+  },
+  {
     path: '/members/staff',
     component: Staff,
     meta: { title: 'Członkowie', requiresAuth: true }
@@ -46,6 +62,11 @@ const routes = [
     path: '/members/guests',
     component: Guests,
     meta: { title: 'Goście', requiresAuth: true }
+  },
+  {
+    path: '/members/consequences',
+    component: Consequences,
+    meta: { title: 'Konsekwencje', requiresAuth: true }
   },
   {
     path: '/mailings',
