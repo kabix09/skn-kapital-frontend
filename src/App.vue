@@ -1,7 +1,7 @@
 <template>
-  <div class="app flex h-screen overflow-hidden" v-if="!isAuthPage">
+  <div class="app flex h-screen" v-if="!isAuthPage">
     <Sidebar />
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col h-full w-full overflow-auto">
       <Header />
       <main class="flex-1 overflow-auto p-4">
         <router-view />
@@ -43,6 +43,10 @@ const isAuthPage = computed(() => layoutlessRoutes.includes(route.path))
 	// --p-list-option-padding: 0.2rem 0.2rem !important; // lista opcji
 	--p-select-option-padding: 0.25rem 0.2rem !important;
 	--p-tag-padding: 0.15rem 0.5rem !important;
+
+	--p-inputtext-padding-y: 0.2rem 0.2rem !important;
+	--p-select-padding-y: 0.3rem !important;
+	--p-datatable-filter-constraint-padding: 0.25rem 0.5rem !important;
 }
 
 @media (max-width: 1536px) {
