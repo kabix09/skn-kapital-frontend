@@ -4,7 +4,8 @@ import About from '../views/About.vue'
 import Dashboard from '../views/Dashboard.vue'
 import EventManagement from '../views/EventManagement.vue'
 import PublicationsManagement from '../views/PublicationsManagement.vue'
-import Members from '../views/Members.vue'
+import Staff from '../views/Staff.vue'
+import Guests from '../views/Guests.vue'
 import Mailings from '../views/Mailings.vue'
 import NotFound from '../components/Error/NotFound.vue'
 import Login from '../components/Auth/Login.vue'
@@ -37,9 +38,14 @@ const routes = [
     meta: { title: 'Harmonogram publikacji', requiresAuth: true }
   },
   {
-    path: '/members',
-    component: Members,
+    path: '/members/staff',
+    component: Staff,
     meta: { title: 'Członkowie', requiresAuth: true }
+  },
+  {
+    path: '/members/guests',
+    component: Guests,
+    meta: { title: 'Goście', requiresAuth: true }
   },
   {
     path: '/mailings',
