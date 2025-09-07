@@ -65,7 +65,6 @@
             </div>
         </div>
 
-
         <!-- Submenu panel (poziomy) -->
         <transition name="submenu">
             <div v-show="activeSubmenu === 'members'" 
@@ -80,7 +79,7 @@
             <router-link class="button" to="/members/board" @click="selectSubmenuItem">
                 <span class="menu-text">Zarząd Koła</span>
             </router-link>
-            <router-link class="button" to="/members/list" @click="selectSubmenuItem">
+            <router-link class="button" to="/members/staff" @click="selectSubmenuItem">
                 <span class="menu-text">Członkowie</span>
             </router-link>
             <router-link class="button" to="/members/guests" @click="selectSubmenuItem">
@@ -101,6 +100,7 @@ import { watch } from 'vue'
 
 const is_expanded = ref(localStorage.getItem("is_expanded") === "true")
 const activeSubmenu = ref(null)
+
 const route = useRoute()
 const isMembersActive = computed(() => route.path.startsWith('/members'))
 

@@ -10,3 +10,16 @@ export function getStatusLabel(status) {
       return null;
   }
 }
+
+export function getMemberStatusLabel(status) {
+  switch (status) {
+    case 'ACTIVE':
+      return 'success';
+    case 'INACTIVE':
+      return 'danger';
+    case 'SUSPENDED':
+      return 'warn';
+    default:
+      return null;
+  }
+}
