@@ -1,43 +1,84 @@
-import { defineStore } from 'pinia'
-import axios from '@/axios'
+import { defineStore } from "pinia";
+import api from "@/axios";
+import { useStaffStore } from "@/stores/staff";
+import { useGuestStore } from "@/stores/guests";
+import { useEventTasksStore } from "@/stores/eventTasks";
+import { useEventsStore } from "@/stores/events";
+import { useEventPublicationsStore } from "@/stores/eventPublications";
+import { useEventMembersStore } from "@/stores/eventMembers";
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
-    token: localStorage.getItem('token') || '',
-    isAuthenticated: false
+    token: localStorage.getItem("token") || null,
+    user: null,
+    isAuthenticated: !!localStorage.getItem("token"),
   }),
 
   getters: {
-    authStatus: state => state.isAuthenticated
+    authStatus: (state) => state.isAuthenticated,
+    getUser: (state) => state.user,
   },
 
   actions: {
-    setToken(token) {
-      this.token = token
-      localStorage.setItem('token', token)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    },
-
-    setAuthStatus(status) {
-      this.isAuthenticated = status
-    },
-
-    // jeszcze nieużywana
-    async checkUserAuthenticationStatus() {
+    async login(email, password) {
       try {
-        const response = await axios.get('/api/authenticated')
-        this.setAuthStatus(response.data.status)
-      } catch (err) {
-        this.setAuthStatus(false)
-        this.token = ''
+        const formData = new FormData();
+        formData.append("Email", email);
+        formData.append("Password", password);
+
+         const { data } = await api.post("/api/Account/login", formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+
+        await this.setToken(data.token);
+
+        // jeżeli API zwraca dane użytkownika
+        // if (data.user) {
+        //   this.user = data.user;
+        // }
+  
+        return { success: true} ;
+      } catch (error) {
+        this.clearAuth();
+        throw error;
       }
     },
 
+    async setToken(token) {
+      this.token = token;
+      this.isAuthenticated = true;
+      localStorage.setItem("token", token);
+    },
+
+    // async checkUserAuthenticationStatus() {
+    //   try {
+    //     const { data } = await api.get("/api/authenticated");
+    //     this.isAuthenticated = data.status === true;
+    //     if (!this.isAuthenticated) {
+    //       this.logout();
+    //     }
+    //   } catch {
+    //     this.logout();
+    //   }
+    // },
+
     logout() {
-      this.token = ''
-      this.isAuthenticated = false
-      localStorage.removeItem('token')
-      delete axios.defaults.headers.common['Authorization']
-    }
-  }
-})
+      this.clearAuth();
+
+      // reset innych store’ów
+      useStaffStore().$reset();
+      useGuestStore().$reset();
+      useEventTasksStore().$reset();
+      useEventsStore().$reset();
+      useEventPublicationsStore().$reset();
+      useEventMembersStore().$reset();
+    },
+
+    clearAuth() {
+      this.token = null;
+      this.user = null;
+      this.isAuthenticated = false;
+      localStorage.clear();
+    },
+  },
+});

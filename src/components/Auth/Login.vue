@@ -51,7 +51,7 @@ import background from '@/assets/SKN_kapital_background.jpg'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import axios from '@/axios'
+import { storeToRefs } from 'pinia';
 
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -65,21 +65,17 @@ const password = ref('')
 const errors = ref([])
 
 const router = useRouter()
-const auth = useAuthStore()
+const authStore = useAuthStore()
+
+const { isAuthenticated } = storeToRefs(authStore);
 
 const onLogin = async () => {
   errors.value = []
 
   try {
-    // const response = await axios.post('/api/login', {
-    //   email: email.value,
-    //   password: password.value
-    // })
+    const { success } = await authStore.login(email.value, password.value)
 
-    const token = "abc-def-ghi" // response.data.token;
-    if (token) {
-      auth.setToken(token)
-      auth.setAuthStatus(true)
+    if (success && isAuthenticated.value) {
       await router.push({ name: 'dashboard' })
     } else {
       errors.value.push('Nieprawidłowe dane logowania.')

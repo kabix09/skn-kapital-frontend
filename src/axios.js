@@ -1,19 +1,33 @@
-import axios from 'axios'
+import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
 
-const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
-  withCredentials: false
-})
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  withCredentials: false,
+});
 
-instance.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+// Request interceptor – dodaje token
+api.interceptors.request.use(
+  (config) => {
+    const authStore = useAuthStore();
+    if (authStore.token) {
+      config.headers.Authorization = `Bearer ${authStore.token}`;
     }
-    return config
+    return config;
   },
-  error => Promise.reject(error)
-)
+  (error) => Promise.reject(error)
+);
 
-export default instance
+// Response interceptor – obsługa 401 globalnie
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const authStore = useAuthStore();
+      authStore.logout();
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default api;
