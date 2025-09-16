@@ -8,9 +8,9 @@
   >
     <!-- Zadanie -->
     <div class="mb-3">
-      <label for="task" class="block text-sm font-medium text-gray-700">Zadanie</label>
-      <InputText name="task" class="w-full mt-1" placeholder="Wprowadź nazwę zadania" />
-      <Message v-if="$form.task?.invalid" severity="error" size="small">{{ $form.task.error?.message }}</Message>
+      <label for="name" class="block text-sm font-medium text-gray-700">Zadanie</label>
+      <InputText name="name" class="w-full mt-1" placeholder="Wprowadź nazwę zadania" />
+      <Message v-if="$form.name?.invalid" severity="error" size="small">{{ $form.name.error?.message }}</Message>
     </div>
 
     <!-- Deadline + Typ wydarzenia -->
@@ -22,16 +22,16 @@
       </div>
 
       <div class="w-1/2">
-        <label for="responsible" class="block text-sm font-medium text-gray-700">Przypisz do</label>
+        <label for="assigneeId" class="block text-sm font-medium text-gray-700">Przypisz do</label>
         <Select
-          name="responsible"
-          :options="people"
-          optionLabel="name"
+          name="assigneeId"
+          :options="members"
+          :optionLabel="member => member.firstName + ' ' + member.lastName"
           optionValue="id"
           class="w-full mt-1"
           placeholder="Wybierz osobę"
         />
-        <Message v-if="$form.responsible?.invalid" severity="error" size="small">{{ $form.responsible.error?.message }}</Message>
+        <Message v-if="$form.assigneeId?.invalid" severity="error" size="small">{{ $form.assigneeId.error?.message }}</Message>
       </div>
     </div>
 
@@ -64,6 +64,8 @@ import { ref } from 'vue'
 import * as yup from 'yup'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
 import { useEventTasksStore } from '@/stores/eventTasks'
+import { useMembersStore } from '@/stores/members'
+import { storeToRefs } from 'pinia';
 
 const props = defineProps({
   eventId: {
@@ -73,6 +75,11 @@ const props = defineProps({
 })
 
 const eventTasksStore = useEventTasksStore()
+const membersStore = useMembersStore()
+
+const { members } = storeToRefs(membersStore)
+
+membersStore.fetchMembers()
 
 // dane do selectów
 const people = ref([
@@ -82,17 +89,17 @@ const people = ref([
 ])
 
 const initialValues = {
-  task: '',
+  name: '',
   deadline: null,
-  responsible: null,
+  assigneeId: null,
   description: '',
 }
 
 // yup schema
 const schema = yup.object({
-  task: yup.string().required('Pole zadanie jest wymagane'),
+  name: yup.string().required('Pole zadanie jest wymagane'),
   deadline: yup.date().nullable().required('Deadline jest wymagany'),
-  responsible: yup.number().nullable().required('Osoba odpowiedzialna jest wymagana'),
+  assigneeId: yup.string().nullable().required('Osoba odpowiedzialna jest wymagana'),
   description: yup.string()
 })
 

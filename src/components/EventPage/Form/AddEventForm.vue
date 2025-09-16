@@ -8,44 +8,46 @@
   >
     <!-- Wydarzenie -->
     <div class="mb-3">
-      <label for="event" class="block text-sm font-medium text-gray-700">Wydarzenie</label>
-      <InputText name="event" class="w-full mt-1" placeholder="Wprowadź nazwę wydarzenia" />
-      <Message v-if="$form.event?.invalid" severity="error" size="small">{{ $form.event.error?.message }}</Message>
+      <label for="name" class="block text-sm font-medium text-gray-700">Wydarzenie</label>
+      <InputText name="name" class="w-full mt-1" placeholder="Wprowadź nazwę wydarzenia" />
+      <Message v-if="$form.name?.invalid" severity="error" size="small">{{ $form.name.error?.message }}</Message>
     </div>
 
     <!-- Deadline + Typ wydarzenia -->
     <div class="flex gap-4 mb-3">
       <div class="w-1/2">
-        <label for="deadline" class="block text-sm font-medium text-gray-700">Deadline</label>
-        <Calendar name="deadline" showIcon dateFormat="yy-mm-dd" class="w-full mt-1" />
-        <Message v-if="$form.deadline?.invalid" severity="error" size="small">{{ $form.deadline.error?.message }}</Message>
+        <label for="date" class="block text-sm font-medium text-gray-700">Deadline</label>
+        <Calendar name="date" showIcon dateFormat="yy-mm-dd" class="w-full mt-1" />
+        <Message v-if="$form.date?.invalid" severity="error" size="small">{{ $form.date.error?.message }}</Message>
       </div>
 
       <div class="w-1/2">
-        <label for="eventType" class="block text-sm font-medium text-gray-700">Typ wydarzenia</label>
+        <label for="eventTypeId" class="block text-sm font-medium text-gray-700">Typ wydarzenia</label>
         <Select
-          name="eventType"
+          name="eventTypeId"
           :options="eventTypes"
+          optionLabel="name"
+          optionValue="id"
           class="w-full mt-1"
           placeholder="Wybierz typ"
         />
-        <Message v-if="$form.eventType?.invalid" severity="error" size="small">{{ $form.eventType.error?.message }}</Message>
+        <Message v-if="$form.eventTypeId?.invalid" severity="error" size="small">{{ $form.eventTypeId.error?.message }}</Message>
       </div>
     </div>
 
     <!-- Osoba odpowiedzialna + Limit osób -->
     <div class="flex gap-4 mb-3">
       <div class="w-1/2">
-        <label for="responsible" class="block text-sm font-medium text-gray-700">Osoba odpowiedzialna</label>
+        <label for="coordinatorId" class="block text-sm font-medium text-gray-700">Osoba odpowiedzialna</label>
         <Select
-          name="responsible"
-          :options="people"
-          optionLabel="name"
+          name="coordinatorId"
+          :options="coordinators"
+          :optionLabel="coordinator => coordinator.firstName + ' ' + coordinator.lastName"
           optionValue="id"
           class="w-full mt-1"
           placeholder="Wybierz osobę"
         />
-        <Message v-if="$form.responsible?.invalid" severity="error" size="small">{{ $form.responsible.error?.message }}</Message>
+        <Message v-if="$form.coordinatorId?.invalid" severity="error" size="small">{{ $form.coordinatorId.error?.message }}</Message>
       </div>
 
       <div class="w-1/2">
@@ -99,23 +101,32 @@ import { ref } from 'vue'
 import * as yup from 'yup'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
 import { useEventsStore } from '@/stores/events'
+import { useUserStore } from '@/stores/users'
+import { storeToRefs } from 'pinia';
 
 const eventsStore = useEventsStore()
+const usersStore = useUserStore()
+
+const { eventTypes } = storeToRefs(eventsStore);
+const { coordinators } = storeToRefs(usersStore);
+
+eventsStore.fetchEventTypes()
+usersStore.fetchCoordinators()
 
 // dane do selectów
-const people = ref([
-  { id: 1, name: 'Jan Kowalski' },
-  { id: 2, name: 'Anna Nowak' },
-  { id: 3, name: 'Piotr Wiśniewski' }
-])
+// const people = ref([
+//   { id: 1, name: 'Jan Kowalski' },
+//   { id: 2, name: 'Anna Nowak' },
+//   { id: 3, name: 'Piotr Wiśniewski' }
+// ])
 
-const eventTypes = ref(['praktycy', 'excel', 'nauka'])
+// const eventTypes = ref(['praktycy', 'excel', 'nauka'])
 
 const initialValues = {
-  event: '',
-  deadline: null,
-  eventType: null,
-  responsible: null,
+  name: '',
+  date: null,
+  eventTypeId: null,
+  coordinatorId: null,
   limit: 0,
   description: '',
   place: '',
@@ -123,10 +134,10 @@ const initialValues = {
 
 // yup schema
 const schema = yup.object({
-  event: yup.string().required('Nazwa jest wymagana'),
-  deadline: yup.date().nullable().required('Deadline jest wymagany'),
-  eventType: yup.string().required('Typ wydarzenia jest wymagany'),
-  responsible: yup.number().nullable().required('Osoba odpowiedzialna jest wymagana'),
+  name: yup.string().required('Nazwa jest wymagana'),
+  date: yup.date().nullable().required('Deadline jest wymagany'),
+  eventTypeId: yup.string().required('Typ wydarzenia jest wymagany'),
+  coordinatorId: yup.string().nullable().required('Osoba odpowiedzialna jest wymagana'),
   limit: yup.number().integer().min(0, 'Limit musi być >= 0').required('Limit jest wymagany'),
   description: yup.string(),
 })
@@ -152,12 +163,36 @@ function formatDateLocal(date) {
 const onSubmit = async (form) => {
   const payload = {
     ...form.values,
-    deadline: form.values.deadline
-      ? formatDateLocal(form.values.deadline)
+    date: form.values.date
+      ? formatDateLocal(form.values.date)
       : null
   }
 
   try {
+    console.log(payload)
+// - potrzxeba
+//     {
+//   "name": "string",
+//   "description": "string",
+//   "date": "2025-09-14T20:11:35.832Z",
+//   "coordinatorId": "string",
+//   "location": "string",
+//   "status": 0,
+//   "eventTypeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+// }
+
+// leci:
+// Object { event: "test", deadline: "2025-09-17", eventType: "excel", responsible: 2, limit: 10, place: "etre", description: "erterw" }
+// ​
+// deadline: "2025-09-17"
+// description: "erterw"
+// event: "test"
+// eventType: "excel"
+// limit: 10
+// place: "etre"
+// responsible: 2
+
+
     await eventsStore.createEvent(payload)
   } catch (error) {
     alert('Wystąpił błąd: ' + error.message)

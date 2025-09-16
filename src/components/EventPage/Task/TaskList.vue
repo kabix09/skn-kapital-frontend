@@ -25,15 +25,23 @@
                 </template>
             </Column>
 
-            <Column field="person" header="Osoba odp." style="width: 15%">
+            <Column field="assignee" header="Osoba odp." style="width: 15%">
                 <template #editor="{ data, field }">
-                    <InputText v-model="data[field]" fluid />
+                    <Select
+                        v-model="data[field]"
+                        :options="members"
+                        :optionLabel="member => member.firstName + ' ' + member.lastName"
+                        optionValue="id"
+                        class="w-full mt-1"
+                        :placeholder="data[field]"
+                        showClear
+                    />
                 </template>
             </Column>
 
-            <Column field="date" header="Deadline" style="width: 15%" :editor="true">
+            <Column field="deadline" header="Deadline" style="width: 15%" :editor="true">
                 <template #body="{ data }">
-                    {{ formatDate(data.date) }}
+                    {{ data.deadline }}
                 </template>
                 <template #editor="{ data, field }">
                     <Calendar 
@@ -56,14 +64,24 @@
                 }"
             >
                 <template #editor="{ data, field }">
-                    <Select v-model="data[field]" :options="eventTaskStatuses" optionLabel="label" optionValue="value" placeholder="Select a Status" fluid>
+                    <Select
+                        v-model="data[field]"
+                        :options="eventTaskStatuses"
+                        :optionLabel="option => getEventTaskStatusLabel(option.value)"
+                        optionValue="value"
+                        placeholder="Select a Status"
+                        fluid
+                        >
                         <template #option="slotProps">
-                            <Tag :value="slotProps.option.value" :severity="getStatusLabel(slotProps.option.value)" />
+                            <Tag
+                            :value="getEventTaskStatusLabel(slotProps.option.value)"
+                            :severity="getEventTaskStatusTag(slotProps.option.value)"
+                            />
                         </template>
                     </Select>
                 </template>
                 <template #body="slotProps">
-                    <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)" />
+                    <Tag :value="getEventTaskStatusLabel(slotProps.data.status)" :severity="getEventTaskStatusTag(slotProps.data.status)" />
                 </template>
             </Column>
 
@@ -73,28 +91,30 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useEventTasksStore } from '@/stores/eventTasks'
+import { useMembersStore } from '@/stores/members'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { getStatusLabel } from '@/utils/statusUtils'
+import { getEventTaskStatusLabel, getEventTaskStatusTag } from '@/utils/statusUtils'
 import { storeToRefs } from 'pinia';
 
 const eventTasksStore = useEventTasksStore()
+const membersStore = useMembersStore()
 
-onMounted(async () => {
-    await eventTasksStore.mockEventTasks();
-})
 
 const props = defineProps({
     eventId: {
-        type: Number,
+        type: String,
         required: true
     }
 })
 
 const { eventTasks } = storeToRefs(eventTasksStore);
 const { eventTaskStatuses } = storeToRefs(eventTasksStore);
+const { members } = storeToRefs(membersStore)
+
+membersStore.fetchMembers()
 
 const editingRows = ref([]);
 
@@ -108,7 +128,15 @@ const formatDate = (value) => {
 };
 
 const onRowEditSave = (event) => {
-    let { newData, index } = event;
-    eventTasksStore.editTask(props.eventId, index, newData);
+    let { newData, data, index } = event;
+
+    var payload = {
+        name: newData.name,
+        deadline: new Date(newData.deadline).toISOString(),
+        status: newData.status,
+        assigneeId: newData.assignee,
+    };
+
+    eventTasksStore.editTask(props.eventId, data.id, index, payload);
 };
 </script>
