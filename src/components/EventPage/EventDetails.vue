@@ -41,17 +41,17 @@
         <div class="md:col-span-3 flex flex-col gap-4">
           <div class="p-1 text-sm text-gray-600 flex items-center gap-2">
             <strong>Status:</strong>
-            <Tag :value="eventsStore.selectedEvent.status" :severity="getStatusLabel(eventsStore.selectedEvent.status)" />
+            <Tag :value="getEventStatusLabel(eventsStore.selectedEvent.status)" :severity="getEventStatusTag(eventsStore.selectedEvent.status)" />
           </div>
 
           <div class="bg-gray-100 rounded-lg p-2 text-sm text-gray-600 flex item-center gap-2">
             <strong class="block mb-1">Data:</strong>
-            <p>{{ eventsStore.selectedEvent.date }}</p>
+            <p>{{ eventsStore.selectedEvent.deadline }}</p>
           </div>
 
           <div class="bg-gray-100 rounded-lg p-2 text-sm text-gray-600 flex item-center gap-2">
             <strong class="block mb-1">Osoba odp:</strong>
-            <p>{{ eventsStore.selectedEvent.responsiblePerson }}</p>
+            <p>{{ eventsStore.selectedEvent.coordinator }}</p>
           </div>
         </div>
       </div>
@@ -87,9 +87,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { watch, ref } from 'vue';
 import { useEventsStore } from '@/stores/events'
-import { getStatusLabel } from '@/utils/statusUtils'
+import { useEventTasksStore } from '@/stores/eventTasks'
+import { getEventStatusTag, getEventStatusLabel } from '@/utils/statusUtils'
 
 import EventParticipantsList from './EventParticipantsList.vue'
 import AddTaskForm from './Form/AddTaskForm.vue'
@@ -97,10 +98,21 @@ import TaskList from './Task/TaskList.vue'
 
 // Store
 const eventsStore = useEventsStore()
+const eventTasksStore = useEventTasksStore()
 
 // Local state
 const isParticipantsOpen = ref(false)
 const isTaskOpen = ref(false)
+
+// watch(
+//   () => eventsStore.selectedEvent, 
+//   async (newEvent) => {
+//     if (newEvent) {
+//       await eventTasksStore.fetchEventTasks(newEvent.id)
+//     }
+//   },
+//   { immediate: true } // jeśli chcesz odpalić od razu przy starcie gdy już jest ustawione
+// )
 
 function openParticipantsList() {
   isParticipantsOpen.value = true
