@@ -20,9 +20,17 @@ api.interceptors.request.use(
 
 // Response interceptor – obsługa 401 globalnie
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(response);
+    if (response.code == "ERR_NETWORK") {
+      const authStore = useAuthStore();
+      authStore.logout();
+    }
+    return response;
+  },
   (error) => {
-    if (error.response?.status === 401) {
+    console.log(error);
+    if (error.response?.status === 401 || error.response?.status === 500 || error.code == "ERR_NETWORK") {
       const authStore = useAuthStore();
       authStore.logout();
     }
