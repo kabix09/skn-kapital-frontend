@@ -30,6 +30,7 @@
           optionValue="id"
           class="w-full mt-1"
           placeholder="Wybierz osobę"
+          :showClear="true"
         />
         <Message v-if="$form.assigneeId?.invalid" severity="error" size="small">{{ $form.assigneeId.error?.message }}</Message>
       </div>

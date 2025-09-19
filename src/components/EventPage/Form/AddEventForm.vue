@@ -46,6 +46,7 @@
           optionValue="id"
           class="w-full mt-1"
           placeholder="Wybierz osobę"
+          :showClear="true"
         />
         <Message v-if="$form.coordinatorId?.invalid" severity="error" size="small">{{ $form.coordinatorId.error?.message }}</Message>
       </div>
