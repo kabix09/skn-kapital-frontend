@@ -22,16 +22,16 @@
       </div>
 
       <div class="w-1/2">
-        <label for="responsiblePerson" class="block text-sm font-medium text-gray-700">Osoba odpowiedzialna</label>
+        <label for="assigneeId" class="block text-sm font-medium text-gray-700">Przypisz do</label>
         <Select
-          name="responsiblePerson"
-          :options="people"
-          class="w-full mt-1"
-          optionLabel="name"
+          name="assigneeId"
+          :options="members"
+          :optionLabel="member => member.firstName + ' ' + member.lastName"
           optionValue="id"
+          class="w-full mt-1"
           placeholder="Wybierz osobę"
         />
-        <Message v-if="$form.responsiblePerson?.invalid" severity="error" size="small">{{ $form.responsiblePerson.error?.message }}</Message>
+        <Message v-if="$form.assigneeId?.invalid" severity="error" size="small">{{ $form.assigneeId.error?.message }}</Message>
       </div>
     </div>
 
@@ -64,22 +64,22 @@
 import { ref } from 'vue'
 import * as yup from 'yup'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
-import { useEventPublicationsStore } from '@/stores/eventPublications'
+import { usePublicationsStore } from '@/stores/publications'
+import { useMembersStore } from '@/stores/members'
+import { storeToRefs } from 'pinia';
 
-const publicationsStore = useEventPublicationsStore()
+const publicationsStore = usePublicationsStore()
+const membersStore = useMembersStore()
 
-// dane do selectów
-const people = ref([
-  { id: 1, name: 'Jan Kowalski' },
-  { id: 2, name: 'Anna Nowak' },
-  { id: 3, name: 'Piotr Wiśniewski' }
-])
+const { members } = storeToRefs(membersStore)
+
+membersStore.fetchMembers()
 
 // wartości początkowe
 const initialValues = {
-  event: 'test',
+  event: '',
   deadline: null,
-  responsiblePerson: null,
+  assigneeId: null,
   place: '',
 }
 
@@ -87,7 +87,7 @@ const initialValues = {
 const schema = yup.object({
   event: yup.string().required('Temat publikacji jest wymagany'),
   deadline: yup.date().nullable().required('Data dodania jest wymagana'),
-  responsiblePerson: yup.number().nullable().required('Osoba odpowiedzialna jest wymagana'),
+  assigneeId: yup.string().nullable(),
   place: yup.string().required('Miejsce jest wymagane')
 })
 
@@ -105,16 +105,12 @@ function formatDateLocal(date) {
 // obsługa submit
 const onSubmit = async (form) => {
   const payload = {
-    id: Date.now(),
-    name: form.values.event,
-    startDate: form.values.deadline
+    topic: form.values.event,
+    publicationDate: form.values.deadline
       ? formatDateLocal(form.values.deadline)
       : null,
-    endDate: form.values.deadline
-      ? formatDateLocal(form.values.deadline)
-      : null,
-    responsiblePerson: form.values.responsiblePerson,
-    place: form.values.place
+    assignedToId: form.values.assigneeId,
+    // place: form.values.place
   }
 
   try {

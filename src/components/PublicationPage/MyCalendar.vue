@@ -6,7 +6,7 @@
 
 <script setup>
 import { ScheduleXCalendar } from '@schedule-x/vue'
-import { onMounted, watch } from 'vue'
+import { onMounted, computed, watchEffect } from 'vue'
 import {
   createCalendar,
   createViewMonthAgenda,
@@ -14,12 +14,14 @@ import {
 } from '@schedule-x/calendar'
 import '@schedule-x/theme-default/dist/index.css'
 import { createEventModalPlugin } from '@schedule-x/event-modal'
-import { useEventPublicationsStore } from '@/stores/eventPublications'
+import { usePublicationsStore } from '@/stores/publications'
+import { storeToRefs } from 'pinia'
 
-// Deklarujemy, że Calendar może emitować eventy
+// Calendar może emitować eventy
 const emit = defineEmits(['addPublication'])
 
-const eventPublicationsStore = useEventPublicationsStore()
+const publicationsStore = usePublicationsStore()
+const { publications } = storeToRefs(publicationsStore)
 
 const calendarApp = createCalendar({
   selectedDate: new Date().toISOString().split('T')[0],
@@ -34,55 +36,48 @@ const calendarApp = createCalendar({
       console.log('Event clicked:', event)
     },
   },
-  events: [], // startowo puste, wypełnimy później
+  events: [],
 })
 
-// Metoda mapująca dane ze store → model kalendarza
-function updateCalendarEvents() {
-  const mappedEvents = eventPublicationsStore.getEventPublications.map(pub => ({
+// 🔹 Mappowanie danych ze store do modelu kalendarza
+const mappedEvents = computed(() =>
+  publications.value.map(pub => ({
     id: pub.id,
-    title: pub.name,
-    start: pub.startDate,
-    end: pub.endDate
+    title: pub.topic,
+    start: pub.publicationDate,
+    end: pub.publicationDate
   }))
-  calendarApp.events.set(mappedEvents)
-}
+)
+
+// 🔹 Automatyczna synchronizacja z kalendarzem
+watchEffect(() => {
+  calendarApp.events.set(mappedEvents.value)
+})
 
 onMounted(async () => {
-  await eventPublicationsStore.mockEventPublications()
-  
-  // Ustawiamy eventy w kalendarzu
-  updateCalendarEvents()
-  
+  await publicationsStore.fetchPublications()
+
   // Dodajemy przycisk w nagłówku kalendarza
   const header = document.querySelector('.sx__calendar-header-content')
   if (header) {
     const btn = document.createElement('button')
     btn.textContent = 'Dodaj publikacje'
-    btn.className = 'my-custom-button sx__ripple px-4 py-2 text-sm font-semibold text-white rounded hover:bg-blue-700'
+    btn.className =
+      'my-custom-button sx__ripple px-4 py-2 text-sm font-semibold text-white rounded hover:bg-blue-700'
     btn.style.setProperty('background-color', 'var(--dark-button)', 'important')
 
     btn.addEventListener('click', () => {
-      emit('addPublication') // Wywołujemy event do rodzica
+      emit('addPublication')
     })
 
     header.insertBefore(btn, header.firstChild)
   }
 })
-
-// 🔹 Obserwacja zmian w store → automatyczne odświeżenie kalendarza
-watch(
-  () => eventPublicationsStore.getEventPublications,
-  () => {
-    updateCalendarEvents()
-  },
-  { deep: true }
-)
-</script> 
+</script>
 
 <style>
 .sx__calendar-header {
-  padding: 4px 8px !important; /* mniejsze marginesy wewnętrzne */
+  padding: 4px 8px !important;
   min-height: auto !important;
 }
 

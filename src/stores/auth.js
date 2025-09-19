@@ -4,7 +4,7 @@ import { useStaffStore } from "@/stores/staff";
 import { useGuestStore } from "@/stores/guests";
 import { useEventTasksStore } from "@/stores/eventTasks";
 import { useEventsStore } from "@/stores/events";
-import { useEventPublicationsStore } from "@/stores/eventPublications";
+import { usePublicationsStore } from "@/stores/publications";
 import { useEventMembersStore } from "@/stores/eventMembers";
 
 export const useAuthStore = defineStore("auth", {
@@ -70,7 +70,7 @@ export const useAuthStore = defineStore("auth", {
       useGuestStore().$reset();
       useEventTasksStore().$reset();
       useEventsStore().$reset();
-      useEventPublicationsStore().$reset();
+      usePublicationsStore().$reset();
       useEventMembersStore().$reset();
     },
 

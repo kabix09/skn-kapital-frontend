@@ -65,17 +65,17 @@ export const useEventsStore = defineStore('events', {
             try {
                 // Tworzymy wydarzenie
                 const response = await api.post('/api/Event', payload, {
-                headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' }
                 });
 
                 // response.data zawiera { id: ... }
                 const data = response.data;
 
                 if (data.id) {
-                // Pobieramy pełne dane nowego wydarzenia
-                const detailResponse = await api.get(`/api/Event/${data.id}`);
+                    // Pobieramy pełne dane nowego wydarzenia
+                    const detailResponse = await api.get(`/api/Event/${data.id}`);
 
-                this.events.push(detailResponse.data);
+                    this.events.push(detailResponse.data);
                 }
             } catch (error) {
                 console.error(error);
