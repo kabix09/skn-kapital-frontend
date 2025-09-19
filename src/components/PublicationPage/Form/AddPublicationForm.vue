@@ -37,12 +37,26 @@
 
 
 
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       <label for="place" class="block text-sm font-medium text-gray-700">Miejsce organizacji</label>
       <InputText name="place" class="w-full mt-1" placeholder="Wprowadź miejsce wydarzenia" />
       <Message v-if="$form.place?.invalid" severity="error" size="small">{{ $form.place.error?.message }}</Message>
-    </div>
+    </div> -->
+    <div class="mb-3">
+          <label for="socialMedia" class="block text-sm font-medium text-gray-700">Platforma publikacji</label>
 
+        <MultiSelect 
+          name="socialMedia"
+          display="chip" 
+          :options="socialMedia" 
+          optionLabel="friendlyName"
+            optionValue="id"
+          filter 
+          placeholder="Select Platform"
+          :maxSelectedLabels="3" 
+          class="w-full mt-1"
+         />
+    </div>
     <!-- Przycisk -->
     <div class="text-right">
       <Button
@@ -53,7 +67,9 @@
       />
     </div>
 
-    <!-- Debug form state -->
+
+
+<!-- Debug form state -->
     <!-- <Fieldset legend="Form State" class="h-40 overflow-auto">
       <pre class="whitespace-pre-wrap">{{ $form }}</pre>
     </Fieldset> -->
@@ -67,20 +83,23 @@ import { yupResolver } from '@primevue/forms/resolvers/yup'
 import { usePublicationsStore } from '@/stores/publications'
 import { useMembersStore } from '@/stores/members'
 import { storeToRefs } from 'pinia';
+import { toRaw } from 'vue'
 
 const publicationsStore = usePublicationsStore()
 const membersStore = useMembersStore()
 
 const { members } = storeToRefs(membersStore)
-
+const { socialMedia } = storeToRefs(publicationsStore)
+  
 membersStore.fetchMembers()
+publicationsStore.fetchSocialMedia()
 
 // wartości początkowe
 const initialValues = {
   event: '',
   deadline: null,
   assigneeId: null,
-  place: '',
+  socialMedia: [],
 }
 
 // walidacja
@@ -88,7 +107,7 @@ const schema = yup.object({
   event: yup.string().required('Temat publikacji jest wymagany'),
   deadline: yup.date().nullable().required('Data dodania jest wymagana'),
   assigneeId: yup.string().nullable(),
-  place: yup.string().required('Miejsce jest wymagane')
+  socialMedia: yup.array().required('Wybierz przynajmniej jedną platformę')
 })
 
 // resolver na bazie yup
@@ -110,11 +129,11 @@ const onSubmit = async (form) => {
       ? formatDateLocal(form.values.deadline)
       : null,
     assignedToId: form.values.assigneeId,
-    // place: form.values.place
+    socialMedia: toRaw(form.values.socialMedia).slice()
   }
 
   try {
-    publicationsStore.createPublication(payload) // dodanie do store
+    publicationsStore.createPublication(payload)
   } catch (error) {
     alert('Wystąpił błąd: ' + error.message)
   }

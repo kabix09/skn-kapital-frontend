@@ -5,6 +5,7 @@ export const usePublicationsStore = defineStore('publications', {
     id: 'publications',
     state: () => ({
         publications: [],
+        socialMedia: [],
         count: 0,
         loading: false,
         error: null,
@@ -15,6 +16,22 @@ export const usePublicationsStore = defineStore('publications', {
         getError: (state) => state.error,
     },
     actions: {
+        async fetchSocialMedia() {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await api.get('/api/SocialMedia');
+                if (response.status !== 200) {
+                    throw new Error('Network response was not ok');
+                }
+
+                this.socialMedia = await response.data;
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.loading = false;
+            }
+        },
         async fetchPublications() {
             this.loading = true;
             this.error = null;
