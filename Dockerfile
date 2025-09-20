@@ -1,25 +1,20 @@
-# Wybierz odpowiednią wersję Node.js
-FROM node:19-alpine
+# Bazowy obraz
+FROM node:20-alpine
 
-# Ustaw katalog roboczy
+# Katalog roboczy
 WORKDIR /app
 
-# Skopiuj pliki package.*
-# Skopiuj package.json i package-lock.json
+# Skopiuj tylko package.json i package-lock.json (z cache npm install)
 COPY package*.json ./
 
-# Usuń node_modules i zainstaluj ponownie
-# RUN rm -rf node_modules && npm install
-
 # Zainstaluj zależności
-# RUN npm install
+RUN npm install --production
 
-# Skopiuj resztę plików
+# Skopiuj resztę aplikacji
 COPY . .
 
-# RUN npm run build
-# Domyślna komenda (może zostać nadpisana przez docker-compose)
-# RUN npm list lightningcss
+# Ustaw port
+EXPOSE 5173
 
-CMD [ "npm","run","dev" ]
-#CMD ["sh", "-c", "npm install --no-optional && npm run dev"]
+# Domyślna komenda
+CMD ["npm", "run", "dev"]
