@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Zainstaluj zależności
-RUN npm install --production
+#RUN npm install
 
 # Skopiuj resztę aplikacji
 COPY . .
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5173
 
 # Domyślna komenda
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm install && npm run dev -- --host 0.0.0.0"]

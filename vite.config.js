@@ -18,5 +18,8 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
     }
+  },
+  server: {
+    allowedHosts: ['.localhost', '.localdomain', 'host.docker.internal'],
   }
 });
